@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="DJ Kain Mağaza" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DJ Kain | Mağaza</title>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+
+    <style>
+      /* KATEGORİ BUTONLARI (DJ Controller / Kulaklık / Tişört) */
+
+      .store__categories {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .store__category {
+        display: inline-block;
+        margin: 0 8px;
+        padding: 10px 26px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: 1px;
+        text-decoration: none;
+        color: #444444;
+        background: #f5f5f5;
+        opacity: 0.9;
+        transition: all 0.25s ease;
+      }
+
+      .store__category:hover {
+        opacity: 1;
+        border-color: #4b0082;
+        color: #4b0082;
+      }
+
+      .store__category.active {
+        background: #4b0082;
+        border-color: #4b0082;
+        color: #ffffff;
+        opacity: 1;
+      }
+
+      /* ÜRÜN KARTLARINA SEPET BUTONU */
+
+      .Discography__item__text .price {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #4b0082;
+      }
+
+      .add-to-cart {
+        margin-top: 10px;
+        padding: 8px 18px;
+        border-radius: 999px;
+        border: none;
+        background: #4b0082;
+        color: #ffffff;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+      }
+
+      .add-to-cart:hover {
+        opacity: 0.9;
+      }
+
+      /* HEADER'DA SEPET İKONU */
+
+      .cart-icon {
+        position: relative;
+        margin-left: 15px;
+        color: #ffffff;
+      }
+
+      .cart-count {
+        position: absolute;
+        top: -6px;
+        right: -10px;
+        background: #ff4b4b;
+        color: #ffffff;
+        border-radius: 50%;
+        font-size: 10px;
+        width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* SEPET PANELİ (SAĞDAN AÇILAN) */
+
+      .cart-panel {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 360px;
+        max-width: 90%;
+        height: 100vh;
+        background: #ffffff;
+        box-shadow: -4px 0 15px rgba(0, 0, 0, 0.2);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .cart-panel.open {
+        transform: translateX(0);
+      }
+
+      .cart-panel__header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .cart-panel__header h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .cart-panel__close {
+        background: none;
+        border: none;
+        font-size: 22px;
+        cursor: pointer;
+      }
+
+      .cart-panel__body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 15px 20px;
+      }
+
+      .cart-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      .cart-item span:nth-child(2) {
+        font-weight: 600;
+        margin-left: auto;
+      }
+
+      .cart-remove {
+        background: transparent;
+        border: none;
+        color: #ff4b4b;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 0 4px;
+      }
+
+      .cart-panel__footer {
+        padding: 15px 20px 20px;
+        border-top: 1px solid #eee;
+      }
+
+      .cart-total {
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
+      .site-btn {
+        display: inline-block;
+        background: #4b0082;
+        color: #ffffff;
+        border: none;
+        padding: 10px 20px;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        border-radius: 999px;
+      }
+
+      .site-btn:hover {
+        opacity: 0.9;
+      }
+
+      /* ÖDEME MODALI */
+
+      .payment-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+      }
+
+      .payment-modal.open {
+        display: flex;
+      }
+
+      .payment-modal__content {
+        background: #ffffff;
+        width: 400px;
+        max-width: 95%;
+        border-radius: 8px;
+        padding: 20px 24px;
+      }
+
+      .payment-modal__content h3 {
+        margin-top: 0;
+        margin-bottom: 16px;
+      }
+
+      .payment-modal__content label {
+        font-size: 13px;
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .payment-modal__content input[type="text"],
+      .payment-modal__content input[type="tel"],
+      .payment-modal__content textarea {
+        width: 100%;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        padding: 8px 10px;
+        margin-bottom: 10px;
+        font-size: 13px;
+      }
+
+      .payment-modal__content textarea {
+        resize: vertical;
+        min-height: 70px;
+      }
+
+      .payment-modal__content .row {
+        display: flex;
+        gap: 10px;
+      }
+
+      .payment-modal__content .row > div {
+        flex: 1;
+      }
+
+      .payment-modal__bottom {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .payment-modal__info {
+        font-size: 11px;
+        color: #777;
+        margin-top: 6px;
+      }
+
+      .payment-cancel {
+        background: #999999;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+      <div class="loader"></div>
+    </div>
+
+    <!-- Header Section Begin -->
+    <header class="header header--normal">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-2 col-md-2">
+            <div class="header__logo">
+              <a href="./index.html"><img src="img/logo.png" alt="" /></a>
+            </div>
+          </div>
+          <div class="col-lg-10 col-md-10">
+            <div class="header__nav">
+              <nav class="header__menu mobile-menu">
+                <ul>
+                  <li><a href="./index.html">Ana Sayfa</a></li>
+                  <li><a href="./About.html">Hakkında</a></li>
+                  <li><a href="./Discography.html">Diskografi</a></li>
+                  <li><a href="./Tours.html">Turneler</a></li>
+                  <li class="active"><a href="./store.html">Mağaza</a></li>
+                  <li>
+                    <a href="./Videos.html">Videolar</a>
+                    
+                  </li>
+                  <li><a href="./contact.html">İletişim</a></li>
+                </ul>
+              </nav>
+              <div class="header__right__social">
+                <a href="https://www.facebook.com" target="_blank"
+                  ><i class="fa fa-facebook"></i
+                ></a>
+                <a href="https://x.com" target="_blank"
+                  ><i class="fa fa-twitter"></i
+                ></a>
+                <a href="https://www.instagram.com" target="_blank"
+                  ><i class="fa fa-instagram"></i
+                ></a>
+
+                <!-- Sepet ikonu -->
+                <a href="javascript:void(0)" id="cart-toggle" class="cart-icon">
+                  <i class="fa fa-shopping-cart"></i>
+                  <span class="cart-count" id="cart-count">0</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+      </div>
+    </header>
+    <!-- Header Section End -->
+
+    <!-- Breadcrumb Begin -->
+    <div class="breadcrumb-option">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="breadcrumb__links">
+              <a href="index.html"><i class="fa fa-home"></i> Ana Sayfa</a>
+              <span>Mağaza</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Mağaza Section Begin -->
+    <section class="Discography spad">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="section-title center-title">
+              <h2>Mağaza</h2>
+              <h1>EN İYİLER İÇİN</h1>
+            </div>
+          </div>
+        </div>
+
+        <!-- ÜST KATEGORİ BUTONLARI -->
+        <div class="store__categories">
+          <a href="store.html" class="store__category"> DJ Controller </a>
+          <a href="store-headphones.html" class="store__category"> Kulaklık </a>
+          <a href="store-tshirt.html" class="store__category active">
+            Tişört
+          </a>
+        </div>
+
+        <!-- ÜRÜNLER (6 ADET – 2x3 GRID) -->
+        <div class="row">
+          <!-- 1 -->
+          <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="Discography__item">
+              <div class="Discography__item__pic">
+                <img src="img/store/tShirt/tShirt1.png" alt="" />
+              </div>
+              <div class="Discography__item__text">
+                <span>T-Shirt</span>
+                <h4>Bassline Mode</h4>
+                <span class="price">1.200 ₺</span>
+                <button
+                  class="add-to-cart"
+                  data-name="Bassline Mode"
+                  data-price="1200"
+                >
+                  Sepete Ekle
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 -->
+          <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="Discography__item">
+              <div class="Discography__item__pic">
+                <img src="img/store/tShirt/tShirt2.png" alt="" />
+              </div>
+              <div class="Discography__item__text">
+                <span>T-Shirt</span>
+                <h4>Nightwave Pulse</h4>
+                <span class="price">1.200 ₺</span>
+                <button
+                  class="add-to-cart"
+                  data-name="Nightwave Pulse"
+                  data-price="1200"
+                >
+                  Sepete Ekle
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 -->
+          <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="Discography__item">
+              <div class="Discography__item__pic">
+                <img src="img/store/tShirt/tShirt3.png" alt="" />
+              </div>
+              <div class="Discography__item__text">
+                <span>T-Shirt</span>
+                <h4>DropMaster Tee</h4>
+                <span class="price">1.200 ₺</span>
+                <button
+                  class="add-to-cart"
+                  data-name="DropMaster Tee"
+                  data-price="1200"
+                >
+                  Sepete Ekle
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 -->
+          <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="Discography__item">
+              <div class="Discography__item__pic">
+                <img src="img/store/tShirt/tShirt4.png" alt="" />
+              </div>
+              <div class="Discography__item__text">
+                <span>T-Shirt</span>
+                <h4>Neon Vibe Script</h4>
+                <span class="price">1.200 ₺</span>
+                <button
+                  class="add-to-cart"
+                  data-name="Neon Vibe Script"
+                  data-price="1200"
+                >
+                  Sepete Ekle
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5 -->
+          <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="Discography__item">
+              <div class="Discography__item__pic">
+                <img src="img/store/tShirt/tShirt5.png" alt="" />
+              </div>
+              <div class="Discography__item__text">
+                <span>T-Shirt</span>
+                <h4>Rave Signal Classic</h4>
+                <span class="price">1.200 ₺</span>
+                <button
+                  class="add-to-cart"
+                  data-name="Rave Signal Classic"
+                  data-price="1200"
+                >
+                  Sepete Ekle
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6 -->
+          <div class="col-lg-4 col-md-6 col-sm-6">
+            <div class="Discography__item">
+              <div class="Discography__item__pic">
+                <img src="img/store/tShirt/tShirt6.png" alt="" />
+              </div>
+              <div class="Discography__item__text">
+                <span>T-Shirt</span>
+                <h4>BeatFlow Streetwear</h4>
+                <span class="price">1.200 ₺</span>
+                <button
+                  class="add-to-cart"
+                  data-name="BeatFlow Streetwear"
+                  data-price="1200"
+                >
+                  Sepete Ekle
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Mağaza Section End -->
+
+    <!-- Footer Section Begin -->
+    <footer
+      class="footer footer--normal spad set-bg"
+      data-setbg="img/footer-bg.png"
+    >
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-md-6">
+            <div class="footer__address">
+              <ul>
+                <li>
+                  <i class="fa fa-phone"></i>
+                  <p>Telefon</p>
+                  <h6>0262 414 1414</h6>
+                </li>
+                <li>
+                  <i class="fa fa-envelope"></i>
+                  <p>Email</p>
+                  <h6>DJ.Music@gmail.com</h6>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-4 offset-lg-1 col-md-6">
+            <div class="footer__social">
+              <h2>DJ Kain</h2>
+              <div class="header__right__social">
+                <a href="https://www.facebook.com" target="_blank"
+                  ><i class="fa fa-facebook"></i
+                ></a>
+                <a href="https://x.com" target="_blank"><i class="fa fa-twitter"></i></a>
+                <a href="https://www.instagram.com" target="_blank"
+                  ><i class="fa fa-instagram"></i
+                ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- Footer Section End -->
+
+    <!-- SEPET PANELİ -->
+    <div class="cart-panel" id="cart-panel">
+      <div class="cart-panel__header">
+        <h3>Sepetiniz</h3>
+        <button class="cart-panel__close" id="cart-close">&times;</button>
+      </div>
+      <div class="cart-panel__body">
+        <div id="cart-items"></div>
+      </div>
+      <div class="cart-panel__footer">
+        <div class="cart-total">Toplam: <span id="cart-total">0 ₺</span></div>
+        <button class="site-btn" id="checkout-btn">Ödeme Yap</button>
+      </div>
+    </div>
+
+    <!-- ÖDEME MODALİ -->
+    <div class="payment-modal" id="payment-modal">
+      <div class="payment-modal__content">
+        <h3>Ödeme Bilgileri</h3>
+
+        <label>Kart Üzerindeki İsim</label>
+        <input type="text" id="card-name" placeholder="Ad Soyad" />
+
+        <label>Kart Numarası (Fake)</label>
+        <input
+          type="tel"
+          id="card-number"
+          inputmode="numeric"
+          autocomplete="off"
+          placeholder="1111 2222 3333 4444"
+        />
+
+        <div class="row">
+          <div>
+            <label>Son Kullanma (AA/YY)</label>
+            <input
+              type="text"
+              id="card-expiry"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder="12/30"
+            />
+          </div>
+          <div>
+            <label>CVC</label>
+            <input
+              type="text"
+              id="card-cvc"
+              inputmode="numeric"
+              autocomplete="off"
+              placeholder="123"
+            />
+          </div>
+        </div>
+
+        <label>Adres</label>
+        <textarea id="card-address" placeholder="Adresinizi girin"></textarea>
+
+        <div class="payment-modal__bottom">
+          <button class="site-btn" id="payment-confirm">Ödemeyi Tamamla</button>
+          <button class="site-btn payment-cancel" id="payment-cancel">
+            Vazgeç
+          </button>
+        </div>
+
+        <p class="payment-modal__info">
+          Bu form sadece DEMO içindir. Gerçek kart bilgilerinizi girmeyin ve
+          gerçek ödeme yapılmaz.
+        </p>
+      </div>
+    </div>
+
+    <!-- Js Plugins -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.slicknav.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+      // Basit sepet yapısı (SAYFALAR ARASI ORTAK)
+      let cart = [];
+
+      function loadCart() {
+        try {
+          const saved = localStorage.getItem("dj_kain_cart");
+          cart = saved ? JSON.parse(saved) : [];
+        } catch (e) {
+          cart = [];
+        }
+      }
+
+      function saveCart() {
+        localStorage.setItem("dj_kain_cart", JSON.stringify(cart));
+      }
+
+      // SAYFA AÇILIR AÇILMAZ SEPETİ YÜKLE
+      loadCart();
+
+      const cartToggle = document.getElementById("cart-toggle");
+      const cartPanel = document.getElementById("cart-panel");
+      const cartClose = document.getElementById("cart-close");
+      const cartItemsEl = document.getElementById("cart-items");
+      const cartTotalEl = document.getElementById("cart-total");
+      const cartCountEl = document.getElementById("cart-count");
+      const checkoutBtn = document.getElementById("checkout-btn");
+
+      const paymentModal = document.getElementById("payment-modal");
+      const paymentCancel = document.getElementById("payment-cancel");
+      const paymentConfirm = document.getElementById("payment-confirm");
+
+      const cardNumberInput = document.getElementById("card-number");
+      const cardExpiryInput = document.getElementById("card-expiry");
+      const cardCvcInput = document.getElementById("card-cvc");
+
+      function formatPrice(p) {
+        return p.toLocaleString("tr-TR") + " ₺";
+      }
+
+      function renderCart() {
+        cartItemsEl.innerHTML = "";
+        let total = 0;
+
+        cart.forEach((item, index) => {
+          total += item.price * item.qty;
+
+          const div = document.createElement("div");
+          div.className = "cart-item";
+          div.innerHTML = `
+            <span>${item.name} x ${item.qty}</span>
+            <span>${formatPrice(item.price * item.qty)}</span>
+            <button class="cart-remove" data-index="${index}">✕</button>
+          `;
+          cartItemsEl.appendChild(div);
+        });
+
+        if (cart.length === 0) {
+          cartItemsEl.innerHTML = "<p>Sepetiniz boş.</p>";
+        }
+
+        cartTotalEl.textContent = formatPrice(total);
+        cartCountEl.textContent = cart.reduce((s, i) => s + i.qty, 0);
+
+        // DURUMU LOCALSTORAGE'A YAZ
+        saveCart();
+      }
+
+      // Ürünlere tıklama
+      document.querySelectorAll(".add-to-cart").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const name = btn.dataset.name;
+          const price = parseInt(btn.dataset.price, 10);
+
+          const existing = cart.find((i) => i.name === name);
+          if (existing) {
+            existing.qty += 1;
+          } else {
+            cart.push({ name, price, qty: 1 });
+          }
+          renderCart();
+          cartPanel.classList.add("open");
+        });
+      });
+
+      // Sepetten ürün silme (X butonu)
+      cartItemsEl.addEventListener("click", (e) => {
+        if (e.target.classList.contains("cart-remove")) {
+          const index = parseInt(e.target.dataset.index, 10);
+          if (!Number.isNaN(index) && cart[index]) {
+            if (cart[index].qty > 1) {
+              cart[index].qty -= 1;
+            } else {
+              cart.splice(index, 1);
+            }
+            renderCart();
+          }
+        }
+      });
+
+      cartToggle.addEventListener("click", () => {
+        cartPanel.classList.add("open");
+      });
+
+      cartClose.addEventListener("click", () => {
+        cartPanel.classList.remove("open");
+      });
+
+      checkoutBtn.addEventListener("click", () => {
+        if (cart.length === 0) {
+          alert("Sepetiniz boş.");
+          return;
+        }
+        cartPanel.classList.remove("open");
+        paymentModal.classList.add("open");
+      });
+
+      paymentCancel.addEventListener("click", () => {
+        paymentModal.classList.remove("open");
+      });
+
+      paymentConfirm.addEventListener("click", () => {
+        const name = document.getElementById("card-name").value.trim();
+        const number = document.getElementById("card-number").value.trim();
+        const expiry = document.getElementById("card-expiry").value.trim();
+        const cvc = document.getElementById("card-cvc").value.trim();
+        const address = document.getElementById("card-address").value.trim();
+
+        if (!name || !number || !expiry || !cvc || !address) {
+          alert("Lütfen tüm ödeme bilgilerini doldurunuz.");
+          return;
+        }
+
+        if (number.replace(/\s/g, "").length !== 16) {
+          alert("Kart numarası 16 haneli olmalıdır.");
+          return;
+        }
+
+        if (!/^\d{2}\/\d{2}$/.test(expiry)) {
+          alert("Son kullanma tarihi geçersiz. (AA/YY şeklinde giriniz)");
+          return;
+        }
+
+        if (cvc.length !== 3) {
+          alert("CVC 3 haneli olmalıdır.");
+          return;
+        }
+
+        alert("Demo ödeme tamamlandı. Sipariş oluşturuldu!");
+
+        cart.length = 0;
+        renderCart();
+        paymentModal.classList.remove("open");
+      });
+
+      // KART NUMARASI FORMATLAMA (1111 2222 3333 4444)
+      cardNumberInput.addEventListener("input", () => {
+        let value = cardNumberInput.value.replace(/\D/g, "");
+        value = value.slice(0, 16);
+        const groups = [];
+        for (let i = 0; i < value.length; i += 4) {
+          groups.push(value.slice(i, i + 4));
+        }
+        cardNumberInput.value = groups.join(" ");
+      });
+
+      // SON KULLANMA TARİHİ (AA/YY)
+      cardExpiryInput.addEventListener("input", () => {
+        let value = cardExpiryInput.value.replace(/\D/g, "");
+        value = value.slice(0, 4);
+
+        let month = value.slice(0, 2);
+        let year = value.slice(2);
+
+        if (month.length === 2) {
+          let m = parseInt(month, 10);
+          if (m > 12) m = 12;
+          if (m < 1) m = 1;
+          month = String(m).padStart(2, "0");
+        }
+
+        if (year.length > 0) {
+          cardExpiryInput.value = month + "/" + year;
+        } else {
+          cardExpiryInput.value = month;
+        }
+      });
+
+      // CVC SADECE 3 HANE
+      cardCvcInput.addEventListener("input", () => {
+        let value = cardCvcInput.value.replace(/\D/g, "");
+        cardCvcInput.value = value.slice(0, 3);
+      });
+
+      // SAYFA AÇILDIĞINDA LOCALSTORAGE'TAKİ SEPETİ GÖSTER
+      renderCart();
+    </script>
+  </body>
+</html>
